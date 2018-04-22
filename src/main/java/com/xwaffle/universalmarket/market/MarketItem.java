@@ -113,11 +113,11 @@ public class MarketItem {
         }
 
         lore.add(Text.of(""));
-        lore.add(Text.of(TextColors.AQUA, "SELLER: ", TextColors.YELLOW, getOwnerName()));
-        lore.add(Text.of(TextColors.AQUA, "PRICE: ", TextColors.GOLD, getPrice()));
+        lore.add(Text.of(TextColors.AQUA, "出售者：", TextColors.YELLOW, getOwnerName()));
+        lore.add(Text.of(TextColors.AQUA, "价格：", TextColors.GOLD, getPrice()));
 
         if (UniversalMarket.getInstance().getMarket().expireItems()) {
-            lore.add(Text.of(TextColors.AQUA, "EXPIRES: ", TextColors.GRAY, getExpireTimeFromNow()));
+            lore.add(Text.of(TextColors.AQUA, "到期时间：", TextColors.GRAY, getExpireTimeFromNow()));
         }
 //        lore.add(Text.of(TextColors.AQUA, "MARKET-ID: ", TextColors.GOLD, UniversalMarket.getInstance().getMarket()));
 

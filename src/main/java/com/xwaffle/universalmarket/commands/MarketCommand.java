@@ -38,7 +38,7 @@ public class MarketCommand extends BasicCommand {
             if (player.hasPermission("com.xwaffle.universalmarket.open")) {
                 UniversalMarket.getInstance().getMarket().openMarket(player);
             } else {
-                player.sendMessage(Text.of(TextColors.RED, "You do not have permission to view the market."));
+                player.sendMessage(Text.of(TextColors.RED, "你没有权限打开市场。"));
             }
             return CommandResult.success();
         }
@@ -50,7 +50,7 @@ public class MarketCommand extends BasicCommand {
                     if (player.hasPermission("com.xwaffle.universalmarket.open")) {
                         UniversalMarket.getInstance().getMarket().openMarket(player);
                     } else {
-                        player.sendMessage(Text.of(TextColors.RED, "You do not have permission to view the market."));
+                        player.sendMessage(Text.of(TextColors.RED, "你没有权限打开市场"));
                     }
                     break;
                 case "add":
@@ -58,19 +58,19 @@ public class MarketCommand extends BasicCommand {
 
 
                     if (!player.hasPermission("com.xwaffle.universalmarket.add")) {
-                        player.sendMessage(Text.of(TextColors.RED, "You do not have permission to add items to the market."));
+                        player.sendMessage(Text.of(TextColors.RED, "你没有权限打开市场"));
                         return CommandResult.success();
                     }
 
                     int listingCount = UniversalMarket.getInstance().getMarket().countListings(player.getUniqueId());
                     if (args.length < 2) {
-                        player.sendMessage(Text.of(TextColors.RED, "Invalid Command!"));
-                        player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (price of item in hand) (<optional> Amount)"));
+                        player.sendMessage(Text.of(TextColors.RED, "非法命令！"));
+                        player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (手持物品价格) (<可选参数> 数量)"));
                         return CommandResult.success();
                     }
 
                     if (listingCount >= totalListings) {
-                        player.sendMessage(Text.of(TextColors.RED, "You are already selling the maximum amount of items at a time."));
+                        player.sendMessage(Text.of(TextColors.RED, "你已经一次出售了最大数量的物品。"));
                         return CommandResult.success();
                     }
 
@@ -86,8 +86,8 @@ public class MarketCommand extends BasicCommand {
 
 
                         if (userMaxSellPerm <= listingCount) {
-                            player.sendMessage(Text.of(TextColors.RED, "You've reached your maximum amount of items you can sell in the market."));
-                            player.sendMessage(Text.of(TextColors.RED, "You only have permission to sell ", TextColors.GRAY, userMaxSellPerm, TextColors.RED, " items in the market."));
+                            player.sendMessage(Text.of(TextColors.RED, "你已经达到了你在市场出售物品数量的最大上限。"));
+                            player.sendMessage(Text.of(TextColors.RED, "你只有在市场出售", TextColors.GRAY, userMaxSellPerm, TextColors.RED, "个物品的权限"));
                             return CommandResult.success();
                         }
 
@@ -100,8 +100,8 @@ public class MarketCommand extends BasicCommand {
                         try {
                             price = Double.parseDouble(args[1]);
                         } catch (Exception exc) {
-                            player.sendMessage(Text.of(TextColors.RED, "Invalid Price for Item!"));
-                            player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (price of item in hand) (<optional> Amount)"));
+                            player.sendMessage(Text.of(TextColors.RED, "物品价格参数不正确"));
+                            player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (手持物品价格) (<可选参数> 数量)"));
                             return CommandResult.success();
                         }
 
@@ -111,12 +111,12 @@ public class MarketCommand extends BasicCommand {
                             try {
                                 amount = Integer.parseInt(args[2]);
                                 if (amount <= 0) {
-                                    player.sendMessage(Text.of(TextColors.RED, "You must enter a positive number to sell in the market!"));
+                                    player.sendMessage(Text.of(TextColors.RED, "你必须输入一个正数价格，才能在市场上销售！"));
                                     return CommandResult.success();
                                 }
                             } catch (Exception exc) {
-                                player.sendMessage(Text.of(TextColors.RED, "Invalid Amount for Item!"));
-                                player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (price of item in hand) (<optional> Amount)"));
+                                player.sendMessage(Text.of(TextColors.RED, "物品数量参数不正确"));
+                                player.sendMessage(Text.of(TextColors.YELLOW, "/um " + args[0].toLowerCase() + " (手持物品价格) (<可选参数> 数量)"));
                                 return CommandResult.success();
                             }
                         }
@@ -126,13 +126,13 @@ public class MarketCommand extends BasicCommand {
                             UniqueAccount account = UniversalMarket.getInstance().getEconomyService().getOrCreateAccount(player.getUniqueId()).get();
                             Currency currency = UniversalMarket.getInstance().getEconomyService().getDefaultCurrency();
                             if (account.getBalance(currency).doubleValue() < tax) {
-                                player.sendMessage(Text.of(TextColors.RED, "You can not afford the item tax!"));
-                                player.sendMessage(Text.of(TextColors.RED, "You must pay ", TextColors.YELLOW, UniversalMarket.getInstance().getMarket().getTax(), TextColors.RED, " of the item price."));
-                                player.sendMessage(Text.of(TextColors.RED, "You need to pay ", TextColors.GREEN, tax, TextColors.RED, " in order to sell this item in the market."));
+                                player.sendMessage(Text.of(TextColors.RED, "你付不起税！"));
+                                player.sendMessage(Text.of(TextColors.RED, "你需要为这个物品支付", TextColors.YELLOW, UniversalMarket.getInstance().getMarket().getTax(), TextColors.RED, "。"));
+                                player.sendMessage(Text.of(TextColors.RED, "你需要支付", TextColors.GREEN, tax, TextColors.RED, "才能够在市场上出售物品。"));
                                 return CommandResult.success();
                             } else {
                                 account.withdraw(currency, new BigDecimal(tax), Cause.of(EventContext.empty(), UniversalMarket.getInstance()));
-                                player.sendMessage(Text.of(TextColors.RED, "Tax for selling the item has been taken from you!"));
+                                player.sendMessage(Text.of(TextColors.RED, "商品售出税已经从你的账户上抽取了！"));
                                 player.sendMessage(Text.of(TextColors.DARK_RED, "- $", TextColors.RED, tax));
                             }
                         }
@@ -142,17 +142,17 @@ public class MarketCommand extends BasicCommand {
                             UniqueAccount account = UniversalMarket.getInstance().getEconomyService().getOrCreateAccount(player.getUniqueId()).get();
                             Currency currency = UniversalMarket.getInstance().getEconomyService().getDefaultCurrency();
                             if (account.getBalance(currency).doubleValue() < flatPrice) {
-                                player.sendMessage(Text.of(TextColors.RED, "You must pay ", TextColors.GRAY, "$" + flatPrice, TextColors.RED, " in order to sell in the market."));
+                                player.sendMessage(Text.of(TextColors.RED, "你需要支付", TextColors.GRAY, "$" + flatPrice, TextColors.RED, "才能够在市场上出售物品。"));
                                 return CommandResult.success();
                             } else {
                                 account.withdraw(currency, new BigDecimal(flatPrice), Cause.of(EventContext.empty(), UniversalMarket.getInstance()));
-                                player.sendMessage(Text.of(TextColors.RED, "A Market fee has been taken out!"));
+                                player.sendMessage(Text.of(TextColors.RED, "已经收了一笔市场费！"));
                                 player.sendMessage(Text.of(TextColors.DARK_RED, "- $", TextColors.RED, flatPrice));
                             }
                         }
 
                         if (UniversalMarket.getInstance().getMarket().isItemBlacklisted(stack.getType())) {
-                            player.sendMessage(Text.of(TextColors.RED, "This item cannot be sold (" + stack.getType().getId() + ")"));
+                            player.sendMessage(Text.of(TextColors.RED, "这个物品无法被出售（" + stack.getType().getId() + "）"));
                             return CommandResult.success();
                         }
 
@@ -164,7 +164,7 @@ public class MarketCommand extends BasicCommand {
                         } else {
 
                             if (amount > stack.getQuantity()) {
-                                player.sendMessage(Text.of(TextColors.RED, "You can not sell more than what you're holding."));
+                                player.sendMessage(Text.of(TextColors.RED, "你无法出售超过你手持数量的物品。"));
                                 return CommandResult.success();
                             }
 
@@ -174,7 +174,7 @@ public class MarketCommand extends BasicCommand {
 
                         int id = UniversalMarket.getInstance().getDatabase().createEntry(stack.copy(), player.getUniqueId(), player.getName(), price, System.currentTimeMillis() + expireTime);
                         UniversalMarket.getInstance().getMarket().addItem(new MarketItem(id, stack.copy(), player.getUniqueId(), player.getName(), price, (System.currentTimeMillis() + expireTime)), false);
-                        player.sendMessage(Text.of(TextColors.YELLOW, "Item added to ", TextColors.GRAY, "UniversalMarket", TextColors.YELLOW, " for $", TextColors.DARK_AQUA, price));
+                        player.sendMessage(Text.of(TextColors.YELLOW, "物品已经添加到了", TextColors.GRAY, "UniversalMarket", TextColors.YELLOW, "，价格为 $", TextColors.DARK_AQUA, price));
 
                         if (amount != prevAmount) {
                             stack.setQuantity(prevAmount - amount);
@@ -183,7 +183,7 @@ public class MarketCommand extends BasicCommand {
 
 
                     } else {
-                        player.sendMessage(Text.of(TextColors.RED, "Place an item in your hand to sell!"));
+                        player.sendMessage(Text.of(TextColors.RED, "手持物品来进行出售！"));
                     }
 
 
@@ -191,10 +191,10 @@ public class MarketCommand extends BasicCommand {
                 case "help":
                 case "h":
                 case "?":
-                    player.sendMessage(Text.of(TextColors.DARK_AQUA, "Universal Market Help"));
-                    player.sendMessage(Text.of(TextColors.YELLOW, "/um or /universalmarket"));
-                    player.sendMessage(Text.of(TextColors.YELLOW, "/um a (price) (<optional> amount) or /um add (price) (<optional> amount)", TextColors.GRAY, " - ", TextColors.GREEN, "Sells current held ItemStack for price."));
-                    player.sendMessage(Text.of(TextColors.YELLOW, "/um o or /um open", TextColors.GRAY, " - ", TextColors.GREEN, "Open the Universal Market."));
+                    player.sendMessage(Text.of(TextColors.DARK_AQUA, "Universal Market 帮助"));
+                    player.sendMessage(Text.of(TextColors.YELLOW, "/um 或 /universalmarket"));
+                    player.sendMessage(Text.of(TextColors.YELLOW, "/um a (手持物品价格) (<可选参数> 数量) 或 /um add  (手持物品价格) (<可选参数> 数量)", TextColors.GRAY, " - ", TextColors.GREEN, "将当前手持物品设定价格出售。"));
+                    player.sendMessage(Text.of(TextColors.YELLOW, "/um o 或 /um open", TextColors.GRAY, " - ", TextColors.GREEN, "打开 Universal Market。"));
                     break;
             }
         } else {

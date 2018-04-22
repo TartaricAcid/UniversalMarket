@@ -203,7 +203,7 @@ public class Market {
                             }
                             Sponge.getScheduler().createTaskBuilder().execute(() -> {
                                 player.closeInventory();
-                                player.sendMessage(Text.of(TextColors.GREEN, "Your items have been removed from the Market."));
+                                player.sendMessage(Text.of(TextColors.GREEN, "你的物品已经从市场上被移除。"));
                             }).delayTicks(1).submit(UniversalMarket.getInstance());
 
                         }
@@ -249,13 +249,13 @@ public class Market {
             myList.get(i).set(new ItemBuilder(ItemTypes.STAINED_GLASS_PANE, 1).setName(Text.of("")).setDyeColor(DyeColors.LIME).build());
         }
         if (page > 1) {
-            myList.get(45).set(new ItemBuilder(ItemTypes.ARROW).setName(Text.of(TextColors.YELLOW, "Previous Page")).build());
+            myList.get(45).set(new ItemBuilder(ItemTypes.ARROW).setName(Text.of(TextColors.YELLOW, "上一页")).build());
         }
         if (getListings().size() >= (page * 45)) {
-            myList.get(53).set(new ItemBuilder(ItemTypes.ARROW).setName(Text.of(TextColors.YELLOW, "Next Page")).build());
+            myList.get(53).set(new ItemBuilder(ItemTypes.ARROW).setName(Text.of(TextColors.YELLOW, "下一页")).build());
         }
         if (countListings(player.getUniqueId()) > 0) {
-            myList.get(47).set(new ItemBuilder(ItemTypes.NAME_TAG).setName(Text.of(TextColors.GREEN, "Return Your Items")).setLore(Text.of(TextColors.GRAY, "Return all items that you've put up for sell.")).build());
+            myList.get(47).set(new ItemBuilder(ItemTypes.NAME_TAG).setName(Text.of(TextColors.GREEN, "退还你的物品")).setLore(Text.of(TextColors.GRAY, "退还所有你正在出售的物品。")).build());
         }
         player.openInventory(inv);
     }
@@ -264,7 +264,7 @@ public class Market {
     public void openItemPurchase(Player player, MarketItem marketItem) {
 
         ItemStack background = new ItemBuilder(ItemTypes.STAINED_GLASS_PANE, 1).setName(Text.of("")).setDyeColor(DyeColors.CYAN).build();
-        Inventory inv = new InventoryBuilder("Market Listing", 1) {
+        Inventory inv = new InventoryBuilder("市场列表", 1) {
             @Override
             public void onClickInventoryEvent(ClickInventoryEvent e) {
                 e.setCancelled(true);
@@ -274,7 +274,7 @@ public class Market {
                     int slotClicked = ((SlotAdapter) e.getTransactions().get(0).getSlot()).slotNumber;
 
                     if (slotClicked == 0 && marketItem.getOwnerUUID().equals(player.getUniqueId())) {
-                        player.sendMessage(Text.of(TextColors.DARK_GRAY, "Removed item from UniversalMarket."));
+                        player.sendMessage(Text.of(TextColors.DARK_GRAY, "从市场中移除物品。"));
                         player.getInventory().offer(marketItem.getItem());
                         marketItem.delete();
                         Sponge.getScheduler().createTaskBuilder().execute(() ->
@@ -289,7 +289,7 @@ public class Market {
                         org.spongepowered.api.service.economy.Currency currency = UniversalMarket.getInstance().getEconomyService().getDefaultCurrency();
 
                         if (!UniversalMarket.getInstance().getMarket().doesItemExist(databaseID)) {
-                            player.sendMessage(Text.of(TextColors.RED, "It appears that item is no longer for sale!"));
+                            player.sendMessage(Text.of(TextColors.RED, "看来该物品不会再出售了！"));
                             Sponge.getScheduler().createTaskBuilder().execute(() -> UniversalMarket.getInstance().getMarket().openMarket(player)).submit(UniversalMarket.getInstance());
                             return;
                         }
@@ -297,23 +297,23 @@ public class Market {
 
                         if (account.getBalance(currency).doubleValue() >= marketItem.getPrice()) {
                             item.delete();
-                            player.sendMessage(Text.of(TextColors.DARK_GRAY, "Item Purchased"));
+                            player.sendMessage(Text.of(TextColors.DARK_GRAY, "物品购买了"));
                             account.withdraw(currency, new BigDecimal(marketItem.getPrice()), Cause.of(EventContext.empty(), UniversalMarket.getInstance()));
                             UniversalMarket.getInstance().getEconomyService().getOrCreateAccount(marketItem.getOwnerUUID()).get().deposit(currency, new BigDecimal(marketItem.getPrice()), Cause.of(EventContext.empty(), UniversalMarket.getInstance()));
                             Sponge.getServer().getPlayer(marketItem.getOwnerUUID()).ifPresent(seller -> seller.sendMessage(Text.of(TextColors.DARK_GRAY, "Item Sold.")));
                             Sponge.getServer().getPlayer(marketItem.getOwnerUUID()).ifPresent(seller -> seller.sendMessage(Text.of(TextColors.YELLOW, "+ ", TextColors.GREEN, marketItem.getPrice())));
                             player.sendMessage(Text.of(TextColors.DARK_RED, "- ", TextColors.RED, marketItem.getPrice()));
-                            player.sendMessage(Text.of(TextColors.YELLOW, "New Balance: ", TextColors.GREEN, account.getBalance(currency)));
+                            player.sendMessage(Text.of(TextColors.YELLOW, "新的余额：", TextColors.GREEN, account.getBalance(currency)));
                             player.getInventory().offer(item.getItem());
                             Sponge.getScheduler().createTaskBuilder().execute(player::closeInventory).submit(UniversalMarket.getInstance());
                         } else {
-                            player.sendMessage(Text.of(TextColors.RED, "Insufficient funds."));
+                            player.sendMessage(Text.of(TextColors.RED, "资金不足。"));
                         }
                     } else if (slotClicked == 5) {
                         Sponge.getScheduler().createTaskBuilder().execute(() ->
                                 openMarket(player)).submit(UniversalMarket.getInstance());
                     } else if (slotClicked == 8 && player.hasPermission("com.xwaffle.universalmarket.remove")) {
-                        player.sendMessage(Text.of(TextColors.RED, "You removed a players Listing."));
+                        player.sendMessage(Text.of(TextColors.RED, "你移除了一个玩家的列表。"));
                         marketItem.forceExpire();
                         Sponge.getScheduler().createTaskBuilder().execute(player::closeInventory).submit(UniversalMarket.getInstance());
 
@@ -335,21 +335,21 @@ public class Market {
 
 
         if (player.hasPermission("com.xwaffle.universalmarket.remove")) {
-            myList.get(8).set(new ItemBuilder(ItemTypes.LAVA_BUCKET, 1).setName(Text.of(TextColors.GRAY, "Remove Player Listing")).setLore(Text.of(TextColors.RED, "Admin Only")).build());
+            myList.get(8).set(new ItemBuilder(ItemTypes.LAVA_BUCKET, 1).setName(Text.of(TextColors.GRAY, "移除玩家列表")).setLore(Text.of(TextColors.RED, "仅管理员可用")).build());
         }
 
         ItemStack purchaseItem = new ItemBuilder(ItemTypes.DYE, 1, 10)
-                .setName(Text.of(TextColors.YELLOW, "Accept"))
+                .setName(Text.of(TextColors.YELLOW, "接受交易"))
                 .setDyeColor(DyeColors.LIME).build();
 
 
         if (marketItem.getOwnerUUID().equals(player.getUniqueId())) {
-            myList.get(0).set(new ItemBuilder(ItemTypes.SHEARS, 1).setName(Text.of(TextColors.GRAY, "Remove Listing")).build());
+            myList.get(0).set(new ItemBuilder(ItemTypes.SHEARS, 1).setName(Text.of(TextColors.GRAY, "移除列表")).build());
         }
 
         myList.get(3).set(purchaseItem);
         myList.get(4).set(marketItem.getDisplay());
-        ItemStack backItem = new ItemBuilder(ItemTypes.BARRIER, 1).setName(Text.of(TextColors.RED, "Back")).build();
+        ItemStack backItem = new ItemBuilder(ItemTypes.BARRIER, 1).setName(Text.of(TextColors.RED, "返回")).build();
         myList.get(5).set(backItem);
 
         player.openInventory(inv);

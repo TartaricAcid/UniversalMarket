@@ -78,7 +78,7 @@ public class UniversalMarket {
                     if (marketItem.isExpired()) {
                         if (Sponge.getServer().getPlayer(marketItem.getOwnerUUID()).isPresent()) {
                             Player player = Sponge.getServer().getPlayer(marketItem.getOwnerUUID()).get();
-                            player.sendMessage(Text.of(TextColors.DARK_GRAY, "Your item did not sell, and has expired in the market."));
+                            player.sendMessage(Text.of(TextColors.DARK_GRAY, "你的物品无人购买，已经到期了。"));
                             player.getInventory().offer(marketItem.getItem());
                             marketItem.delete();
                             return;
